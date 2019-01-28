@@ -1,0 +1,41 @@
+import numpy as np
+import pandas as pd
+from serdes_prbsgen import prbs_gen
+from serdes_tx import serdes_tx
+from pyecharts.engine import create_default_environment
+from pyecharts import Line
+import matplotlib.pyplot as plt
+
+if __name__ == '__main__':
+    #generate PRBS data
+    seed = [0, 1, 0, 0, 1, 0, 1]
+    prbsgen = prbs_gen(seed)
+    dig1b = prbsgen.prbs7()
+    #extend PRBS data by sample rate
+    SR = 16
+    DR = 5e9
+    tap = [-1,9,-3,1,0,0,0]
+
+    TX = serdes_tx(dig1b, DR, SR)
+    ana_dout = TX.dataGen(tap)
+    #ana_dout.plot()
+    print(ana_dout.head(10))
+    print(ana_dout.describe())
+    y,t,x = TX.anaTXout(1e-12, ana_dout)
+
+    for i in range(0, len(y)-2*SR,2*SR):
+        plt.plot(y[i:i+SR*2], color='blue')
+
+
+
+    line = Line('PRBS7')
+    line.add('TX out', t, y)
+    line.show_config()
+    env = create_default_environment("html")
+    env.render_chart_to_file(line, path="./plot/tx_anaout.html")
+
+    #plt.plot(t, y)
+    plt.show()
+
+
+
