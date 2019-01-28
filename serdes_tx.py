@@ -47,13 +47,13 @@ class serdes_tx:
         dr = self.dr
         swing = 0.4
         tt = np.linspace(0, len(anaData), len(anaData))
-        pole = 1/rout/1.2/cap/2/np.pi
+        pole = 1/rout/2/cap/1.2
         sampleRate = self.sampleRate
         dt = 1 / sampleRate
         normpole = 2 * np.pi * pole*1 / dr
-        normtxpole2 = 2 * np.pi * pole*2 / dr
-        normtxpole1 = 2 * np.pi * pole*4  / dr
-        normtxzero = 2 * np.pi * pole*10  / dr
+        normtxpole2 = 2 * np.pi * pole*3 / dr
+        normtxpole1 = 2 * np.pi * pole*5  / dr
+        normtxzero = 2 * np.pi * pole*4  / dr
 
         num = [1]
         den = [1 / normpole / normpole, 1 / normpole * 2, 1]
